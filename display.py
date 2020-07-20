@@ -68,20 +68,20 @@ def match_list():
 
 def account_rules():
     embed = discord.Embed(
-        colour=discord.Color.orange(),
+        colour=discord.Color.red(),
         title='Jaeger Account Info:',
         description=f'**MUST READ: [Rules](https://planetsideguide.com/other/jaeger/)**\n',
     )
     embed.set_thumbnail(
         url="https://cdn.discordapp.com/attachments/703912354269888572/727931056476389396/PIL_Logo11_Zoomed.png")
     embed.set_footer(
-        text='Failure to follow these rules can result in your suspension of __**ALL**__ Jaeger events.')
+        text='Failure to follow these rules can result in your suspension from   ALL   Jaeger events.\nBy reacting with a checkmark below, you confirm you understand these rules.')
     return embed
 
 
 def account_info(username, password):
     embed = discord.Embed(
-        colour=discord.Color.orange(),
+        colour=discord.Color.green(),
         title='Jaeger Account Info:',
         description=f'**MUST READ: [Rules](https://planetsideguide.com/other/jaeger/)**\n'
                     f'Username: `{username}`\n '
@@ -90,5 +90,5 @@ def account_info(username, password):
     embed.set_thumbnail(
         url="https://cdn.discordapp.com/attachments/703912354269888572/727931056476389396/PIL_Logo11_Zoomed.png")
     embed.set_footer(
-        text='Failure to follow these rules can result in your suspension of __**ALL**__ Jaeger events.')
+        text='Failure to follow these rules can result in your suspension from   ALL   Jaeger events.\nBy reacting with a checkmark below, you confirm you understand these rules.')
     return embed

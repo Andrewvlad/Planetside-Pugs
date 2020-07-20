@@ -1,5 +1,4 @@
 import asyncio
-from main import *
 
 from discord.ext.commands import bot
 
@@ -19,20 +18,21 @@ password = ['password_1', 'password_2', 'password_3', 'password_4',
             'password_17', 'password_18', 'password_19', 'password_20',
             'password_21', 'password_22', 'password_23', 'password_24']
 
+
 account_position = 0
 
-
-async def account_request(account_need):
+async def increment_return_account_position():
     global account_position
-    account_need: discord.Member
     if account_position >= len(username):
         account_position = 0
-    account_position = account_position + 1
+    account_position += 1
+    return account_position
+
+async def account_request(account_need):
+    account_need: discord.Member
     embed = account_rules()
     msg = await account_need.send(embed=embed)
     await msg.add_reaction('✅')
     await asyncio.sleep(1)
-    await client.wait_for("on_reaction_add", timeout=45.0)
-
 
 # reaction, user = await ctx.bot.wait_for("reaction_add", timeout=45.0, check=predicate)

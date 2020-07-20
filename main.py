@@ -24,12 +24,17 @@ async def help(ctx):
 
 @client.event
 async def on_reaction_add(reaction, user):
-    Channel = client.get_channel('YOUR_CHANNEL_ID')
-    if reaction.message.channel.id != Channel:
-        return
-    if user.reaction.emoji == "✅":
-        embed = account_info(username[account_position], password[account_position])
-
+    if not user.bot:
+        # in a dm, on a message by the bot
+        if reaction.message.channel.type == discord.ChannelType.private and reaction.message.author.id == client.user.id:
+            # if the bot sent the same (correct) reaction as the user just responded with
+            if reaction.me == True and reaction.count == 2 and reaction.emoji == '✅':
+                # unreact (can't be triggered again)
+                await reaction.remove(client.user)
+                pointer = await increment_return_account_position()
+                # send account details (user just confirmed to have read the rules);
+                embed = account_info(username[pointer], password[pointer])
+                msg = await reaction.message.edit(embed=embed)
 
 @client.command(pass_content=True)
 async def test(ctx):
@@ -60,4 +65,4 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
-client.run('NzMyMjYxNTY0OTk1ODYyNTU5.XwyB-Q.j4WhKN6t32WZVKQkBlffcOZ4ER0')
+client.run('')
