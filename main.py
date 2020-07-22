@@ -1,4 +1,5 @@
 import os
+import asyncio
 from discord.ext import commands
 from discord.ext.commands import bot
 
@@ -27,14 +28,21 @@ async def on_reaction_add(reaction, user):
     if not user.bot:
         # in a dm, on a message by the bot
         if reaction.message.channel.type == discord.ChannelType.private and reaction.message.author.id == client.user.id:
-            # if the bot sent the same (correct) reaction as the user just responded with
-            if reaction.me == True and reaction.count == 2 and reaction.emoji == '✅':
-                # unreact (can't be triggered again)
+            if reaction.me == True and reaction.count == 2:
                 await reaction.remove(client.user)
-                pointer = await increment_return_account_position()
-                # send account details (user just confirmed to have read the rules);
-                embed = account_info(username[pointer], password[pointer])
-                msg = await reaction.message.edit(embed=embed)
+                if reaction.emoji == '✅':
+                    # tick response to rules check
+                    if display_account_rules().title == reaction.message.embeds[0].title:
+                        # send account details (user just confirmed to have read the rules);
+                        username_password = await get_next_username_password(user, client) # yes client is being sent as a param. lmk if you figure a better way.
+                        embed = display_account_info(username_password)
+                        username_password = None
+                        await reaction.message.edit(embed=embed)
+                        await asyncio.sleep(10)
+                        # sends followup message
+                        await during_match_provided_acc(user)
+                # elif reaction.emoji == '📢':
+
 
 @client.command(pass_content=True)
 async def test(ctx):
@@ -60,6 +68,8 @@ async def on_member_update(before, after):
             after: discord.Member
             remove_lobby(after.mention)
             await after.send(f'You were removed from the PIL Pugs lobby because you went offline. Please rejoin the lobby when you are back online and ready to play!')
+
+
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):

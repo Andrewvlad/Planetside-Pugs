@@ -4,8 +4,11 @@ from update import *
 captains = []
 
 
-def get_captain(number):
-    return captains[number]
+def get_captain(index):
+    if index >= len(captains):
+        return f'BuggedCaptain#{index + 1}'
+    else:
+        return captains[number]
 
 
 def set_captain(player):
@@ -19,4 +22,3 @@ def remove_captain(player):
 
 def clear_captains():
     clear(captains)
-
