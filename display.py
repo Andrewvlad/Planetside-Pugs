@@ -3,7 +3,7 @@ from discord.utils import get
 
 from lobby import *
 from match import *
-from captains import get_captain
+from captains import *
 from factions import *
 from teams import *
 
@@ -13,7 +13,7 @@ def help_list(ctx):
         colour=discord.Color.orange()
     )
     embed.add_field(name='Lobby Commands',
-                    value='`=j` - Join the lobby for a match\n'
+                    value='`=j` - Join the lbby for a match\n'
                           '`=l` - Leave the lobby for a match\n'
                           '`=q` - See the current lobby for a match'
                     , inline=False)
@@ -55,14 +55,16 @@ def match_list():
         colour=discord.Color.orange()
     )
     team_embed.add_field(name="Team 1",
-                         value=f"Captain: \n {get_captain(0)} ({factions_team[0]})\n Players:" + "\n".join(
-                             team_2),
+                         value=f"Captain: \n {get_captain(0)} ({get_faction_team(0)})\n Players:" + "\n".join(
+                             get_roster()[0]),
                          inline=True)
     team_embed.add_field(name="Team 2",
-                         value=f"Captain: \n {get_captain(1)} ({factions_team[1]})\n Players:" + "\n".join(
-                             team_1),
+                         value=f"Captain: \n {get_captain(1)} ({get_faction_team(1)})\n Players:" + "\n".join(
+                             get_roster()[1]),
                          inline=True)
-    team_embed.add_field(name="Remaining", value="Players:" + "\n".join(roster), inline=True)
+    team_embed.add_field(name="Remaining",
+                         value=f"\n".join(get_match()),
+                         inline=True)
     return team_embed
 
 
@@ -74,10 +76,10 @@ def display_account_rules():
         description=f'**MUST READ: [Rules](https://planetsideguide.com/other/jaeger/)**\n',
     )
     embed.set_thumbnail(
-        url="https://cdn.discordapp.com/attachments/703912354269888572/727931056476389396/PIL_Logo11_Zoomed.png")
+        url="https://cdn.discordoapp.com/attachments/703912354269888572/727931056476389396/PIL_Logo11_Zoomed.png")
     embed.set_footer(
         text=f'Failure to follow these rules can result in your suspension from   ALL   Jaeger events.\n'
-            f'By reacting with a checkmark below, you confirm you understand these rules.')
+             f'By reacting with a checkmark below, you confirm you understand these rules.')
     return embed
 
 
@@ -94,34 +96,35 @@ def display_account_info(username_password):
         url="https://cdn.discordapp.com/attachments/703912354269888572/727931056476389396/PIL_Logo11_Zoomed.png")
     embed.set_footer(
         text=f'Failure to follow these rules can result in your suspension from   ALL   Jaeger events.\n'
-            'By reacting with a checkmark below, you confirm you understand these rules.')
+             'By reacting with a checkmark below, you confirm you understand these rules.')
     return embed
 
 
 def display_during_match_provided_acc():
     embed = discord.Embed(
-        colour = discord.Color.orange(),
-        title = f'Match in Progress:\n'
-                f'{get_captain(0)} vs {get_captain(1)}',
-        description = f'Game in progress! If you have issues with your account, or with players in your game, use the buttons below to report issues.\n'
+        colour=discord.Color.orange(),
+        title=f'Match in Progress:\n'
+              f'{get_captain(0)} vs {get_captain(1)}',
+        description=f'Game in progress! If you have issues with your account, or with players in your game, use the buttons below to report issues.\n'
                     f'Use the  📢  reaction to report an issue with the account; password not working, fewer than 100,000 certs on a character.\n'
                     f'Use the  🚫  reaction to report an issue with a player ingame; Toxicity/Harassment, repeated rules violations, etc.',
     )
     # logo uses up too much space in the embed box
-    #embed.set_thumbnail(
-        #url="https://cdn.discordapp.com/attachments/703912354269888572/727931056476389396/PIL_Logo11_Zoomed.png")
+    # embed.set_thumbnail(
+    # url="https://cdn.discordapp.com/attachments/703912354269888572/727931056476389396/PIL_Logo11_Zoomed.png")
     return embed
 
 
 def display_during_match_own_acc():
     return
 
+
 def display_log_account_sent(requester_member, username, pointer):
-    pointer += 1 #1-based
+    pointer += 1  # 1-based
     embed = discord.Embed(
-        colour = discord.Color.blurple(),
-        title = f'Account {pointer}\'s Details Sent:',
-        description = f'{requester_member.display_name} ({requester_member.name}#{requester_member.discriminator})\n'
+        colour=discord.Color.blurple(),
+        title=f'Account {pointer}\'s Details Sent:',
+        description=f'{requester_member.display_name} ({requester_member.name}#{requester_member.discriminator})\n'
                     f'has been given the account details for {username}, account #{pointer}.'
     )
     embed.set_thumbnail(

@@ -8,7 +8,7 @@ def get_captain(index):
     if index >= len(captains):
         return f'BuggedCaptain#{index + 1}'
     else:
-        return captains[number]
+        return captains[index]
 
 
 def set_captain(player):

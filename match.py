@@ -6,7 +6,7 @@ players = []
 
 def set_match():
     global players
-    players = get_lobby()
+    players = lobby.copy()
     clear_lobby()
 
 

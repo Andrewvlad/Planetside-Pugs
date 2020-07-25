@@ -33,8 +33,8 @@ class CaptainCog(commands.Cog):
     @commands.command()  # !faction [VS/NC/TR]
     @commands.guild_only()
     async def faction(self, ctx):
-        if ctx.author.id in captains:
-            if len(factions_team) == 2:
+        if ctx.author.mention == get_pick():
+            if get_faction_team(captains.index(ctx.author.mention)):
                 await ctx.channel.send(
                     f'{ctx.author.mention}, you have already picked a faction! Please pick a player instead.')
             elif not ctx.message.content[9:] in get_faction():
@@ -45,16 +45,17 @@ class CaptainCog(commands.Cog):
                 set_faction_team(ctx.message.content[9:], captains.index(ctx.author.mention))
                 pick_switch()
                 await ctx.channel.send(f'{ctx.author.mention} picked {ctx.message.content[9:]}!')
+                await ctx.channel.send(embed=match_list())
         else:
             await ctx.channel.send(f'{ctx.author.mention} it is not your turn to pick!')
 
     @commands.command()  # !pick [@member]
     @commands.guild_only()
     async def pick(self, ctx, member: discord.Member):
-        if ctx.author.id == team_pick_captain:
-            if len(factions_team) != 2:
+        if ctx.author.mention == get_pick():
+            if not get_faction_team[captains.index(ctx.author.mention)]:
                 await ctx.channel.send(f'{ctx.author.mention} please pick your faction first')
-            elif member.mention not in roster:
+            elif member.mention not in players:
                 await ctx.channel.send(f'{ctx.author.mention}, you cannot pick {member.mention}')
             else:
                 add_roster(member.mention, captains.index(ctx.author.mention))
@@ -63,7 +64,7 @@ class CaptainCog(commands.Cog):
                 await ctx.channel.send(embed=match_list())
         else:
             await ctx.channel.send(f'{ctx.author.mention} it is not your turn to pick!')
-        if not roster:
+        if not players:
             clear_match()
             await ctx.channel.send('Teams and factions are picked, prepare to play!')
 
